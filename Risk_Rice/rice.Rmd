@@ -1,0 +1,109 @@
+---
+title: "Risk RICE"
+author: "Felipe Pérez Vargas"
+date: "11/11/2020"
+output: html_document
+---
+
+
+
+```{r}
+
+names1<-c('US','UK','France','Germany','Japan')
+cm<-matrix(c(1.0000,0.5003,0.4389,0.3681,0.2663,
+             0.5003,1.0000,0.5420,0.4265,0.3581,
+             0.4389,0.5420,1.0000,0.6032,0.3923,
+             0.3681,0.4265,0.6032,1.0000,0.3663,
+             0.2663,0.3581,0.3923,0.3663,1.0000), ncol = 5, nrow = 5, byrow=TRUE);cm #Matriz de correlación
+
+w<-seq(0,1, by=0.1);w
+mj<-c(0.150,0.149,0.147,0.146,0.144,0.143,0.142,0.140,0.139,0.137,0.136)
+vj<-c(0.230,0.212,0.195,0.179,0.166,0.155,0.147,0.143,0.143,0.146,0.154)
+
+#Oportunidad de invertir en Japón
+ij<-matrix(c(t(w), t(mj), t(vj)), ncol=3, nrow=11, byrow=FALSE);ij
+
+plot(vj,mj, type='l', xlab = 'Standar Deviation (Volatility)')
+abline(h=0.136, col="blue")
+abline(v=0.154, col="blue")
+
+names1<-c('US','UK','France','Germany','Japan')
+mean<-c(0.1355,0.1589,0.1519,0.1435,0.1497) #Retornos 
+sigma<-c(0.1535,0.2430,0.2324,0.2038,0.2298) # Volatilidad
+Eus<-mj
+Eja<-vj
+wus<-w
+wja<-(1-wus)  
+rus<-0.1355
+rja<-0.1497
+dus<-0.1535
+dja<-0.2298
+rouj<-0.2663
+
+
+Erp<-wus*rus+wja*rja;round(Erp,3)
+varuj<-wus^{2}*dus^{2}+wja^{2}*dja^{2}+2*wus*wja*rouj*dus*dja;round(varuj,3)
+stdusja<-sqrt(varuj);round(stdusja,3)
+
+wm<-seq(-1,2,by=0.1)
+wus<-wm
+wja<-(1-wus)  
+Erp<-wus*rus+wja*rja;round(Erp,3)
+varuj<-wus^{2}*dus^{2}+wja^{2}*dja^{2}+2*wus*wja*rouj*dus*dja;round(varuj,3)
+stdusja<-sqrt(varuj);round(stdusja,3)
+plot(varuj, Erp, xlab = 'Volatilidad', ylab ='Rendimiento', type = 'o')
+
+#Oporunidad de inversion para UK-Japan
+wm<-seq(0,1,by=0.01)
+Eus<-mj #UK
+Eja<-vj
+wus<-wm  #UK
+wja<-(1-wus)  
+rus<-15.890 #UK
+rja<-14.970
+dus<-24.300 #UK
+dja<-22.980
+rouj<-0.3581 #UKJAP
+
+
+Erp<-wus*rus+wja*rja;round(Erp,5)/100
+varuj<-wus^{2}*dus^{2}+wja^{2}*dja^{2}+2*wus*wja*rouj*dus*dja;round(varuj,3)
+stdusja<-sqrt(varuj);round(stdusja,3)
+min(round(stdusja,3))
+
+
+plot(varuj, Erp, xlab = 'Volatilidad', ylab ='Rendimiento', type = 'o')
+
+
+#Oporunidad de inversion para UK-Japan con covarianza igual
+wm<-seq(0,1,by=0.01)
+Eus<-mj #UK
+Eja<-vj
+wus<-wm  #UK
+wja<-(1-wus)  
+rus<-15.890 #UK
+rja<-14.970
+dus<-24.300 #UK
+dja<-22.980
+rouj<-0.500 #UKJAP
+
+
+Erp1<-wus*rus+wja*rja;round(Erp,5)/100
+varuj1<-wus^{2}*dus^{2}+wja^{2}*dja^{2}+2*wus*wja*rouj*dus*dja;round(varuj,3)
+stdusja1<-sqrt(varuj1);round(stdusja1,3)
+
+min(round(stdusja1,3))
+plot(stdusja, Erp, xlab = 'Volatilidad', ylab ='Rendimiento', type = 'o', col='red')
+lines(stdusja1, Erp1, xlab = 'Volatilidad', ylab ='Rendimiento', type = 'o', col='green')
+legend("bottomright", legend = c("cor=0.351", "cor=0.500"),
+       lwd = 3, col = c("red", "green"))
+abline(h=14.32)
+
+
+```
+
+
+
+
+
+

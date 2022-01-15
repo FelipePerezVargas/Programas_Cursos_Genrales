@@ -1,0 +1,16 @@
+library(dplyr)
+demo<-read.csv('demographics.csv')
+View(demo)
+
+demo2<-mutate(demo,income2=income*100)
+demo2<-mutate(demo,diff=income-carpr)
+y<-rnorm(510,mean = 0,sd = 1)
+demo2<-mutate(demo,new_var=y)
+demo2<-mutate(demo,across(c(1,5),~./1000, .names = '{col}_2'))
+demo2<-mutate(demo,across(where(is.numeric),~./1000))
+demo2<-mutate(demo,across(c(1,5),~.*3, .names = '{col}_new'))
+demo2<-mutate(demo,across(c(1,5),.fns = mean, .names = '{col}_mean'))
+demo2<-mutate(demo,across(where(is.numeric),.fns = mean, .names = '{col}_mean'))
+demo2<-mutate(filter(demo, retired=='Yes'), across(c(1,3,5), ~./1000 , .names = '{col}_2'))
+
+View(demo2)
